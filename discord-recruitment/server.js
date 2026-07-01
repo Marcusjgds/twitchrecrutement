@@ -110,7 +110,7 @@ function buildEmbed({ pseudo, discordId, position, score, total, statusLabel, co
     { name: "IP", value: `\`${ip}\``, inline: true },
   ];
   return {
-    username: "Recrutement Discord",
+    username: "Système de Recrutement",
     embeds: [
       {
         title: cheated ? "🚫 Questionnaire abandonné (triche détectée)" : "📋 Résultat de questionnaire",
