@@ -84,13 +84,19 @@ async function sendWebhook(payload) {
     return;
   }
   try {
-    await fetch(WEBHOOK_URL, {
+    const res = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error(`[webhook] Discord a refusé le message — status ${res.status}: ${body}`);
+    } else {
+      console.log("[webhook] envoyé avec succès, status", res.status);
+    }
   } catch (e) {
-    console.error("[webhook] échec de l'envoi:", e.message);
+    console.error("[webhook] échec réseau lors de l'envoi:", e.message);
   }
 }
 
