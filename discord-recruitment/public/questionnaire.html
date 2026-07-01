@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Questionnaire — Recrutement</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span><span class="dot">●</span> QUESTIONNAIRE_CANDIDATURE</span>
+    <a href="/" style="color:var(--muted); font-family:var(--mono); font-size:12px;">← quitter</a>
+  </div>
+
+  <div class="wrap">
+
+    <!-- Étape 1 : identité -->
+    <div id="step-identity">
+      <p class="eyebrow">// étape 1 / 2</p>
+      <h1>Avant de commencer.</h1>
+      <p class="sub">Indique ton pseudo Discord. C'est ce nom qui sera transmis à l'équipe avec ton résultat.</p>
+
+      <div class="panel">
+        <div class="form-row">
+          <label for="pseudo">Pseudo Discord *</label>
+          <input id="pseudo" type="text" placeholder="ex: Kael#0001 ou @kael" autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label for="discordId">ID Discord (optionnel)</label>
+          <input id="discordId" type="text" placeholder="ex: 123456789012345678" autocomplete="off">
+          <p class="form-hint">Clic droit sur ton profil → Copier l'identifiant (mode développeur activé).</p>
+        </div>
+
+        <div class="warning-box">
+          ⚠ RÈGLES DU TEST<br>
+          — 20 questions, une seule tentative toutes les 24h.<br>
+          — Ne change pas d'onglet et ne fais pas sortir la souris de la fenêtre : c'est détecté et
+          entraîne un échec automatique, sans repêchage.<br>
+          — Il faut strictement plus de la moitié de bonnes réponses pour être accepté.
+        </div>
+
+        <div class="actions-row">
+          <button id="start-btn">Commencer le test →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 2 : quiz -->
+    <div id="step-quiz" style="display:none;">
+      <div class="progress-shell">
+        <div class="progress-meta">
+          <span id="progress-label">QUESTION 1 / 20</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="ascii-bar" id="ascii-bar"></div>
+      </div>
+
+      <div class="panel">
+        <p class="q-index" id="q-index">Q001</p>
+        <p class="q-text" id="q-text"></p>
+        <div class="options" id="options"></div>
+        <div class="actions-row">
+          <button id="next-btn" disabled>Suivant →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Étape 3 : résultat -->
+    <div id="step-result" style="display:none;">
+      <div class="panel" style="text-align:center;">
+        <div class="result-icon" id="result-icon"></div>
+        <p class="result-title" id="result-title"></p>
+        <p class="score-line" id="result-score"></p>
+        <p class="sub" id="result-msg" style="margin:0 auto;"></p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Overlay d'échec immédiat (triche détectée) -->
+  <div class="overlay" id="cheat-overlay" style="display:none;">
+    <div class="overlay-box">
+      <div class="result-icon">🚫</div>
+      <p class="result-title ko">Échec automatique</p>
+      <p class="sub">Tu as quitté la fenêtre pendant le test. C'est considéré comme un abandon.<br>Tu pourras retenter ta chance dans <strong id="cheat-cooldown">24h</strong>.</p>
+      <a href="/" class="btn btn-outline" style="display:inline-block; margin-top:10px; text-decoration:none;">Retour à l'accueil</a>
+    </div>
+  </div>
+
+<script src="/script.js"></script>
+</body>
+</html>

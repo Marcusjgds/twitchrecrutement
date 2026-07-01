@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recrutement — Staff Discord</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <span><span class="dot">●</span> SYSTEME_DE_RECRUTEMENT — EN LIGNE</span>
+    <span id="clock"></span>
+  </div>
+
+  <div class="wrap">
+    <p class="eyebrow">// candidature staff</p>
+    <h1>Rejoins l'équipe de modération.</h1>
+    <p class="sub">
+      Choisis le poste auquel tu candidates. Tu passeras ensuite un questionnaire chronométré
+      pour valider tes connaissances. Reste concentré : quitter la fenêtre pendant le test
+      entraîne un échec immédiat.
+    </p>
+
+    <div id="positions"></div>
+
+    <div id="blocked-box" class="warning-box" style="display:none;"></div>
+
+    <div class="footer-note">Toute tentative est enregistrée et transmise à l'équipe. Bonne chance.</div>
+  </div>
+
+<script>
+  const positions = [
+    { id: "moderateur", name: "Modérateur Discord", desc: "Gestion des salons, application du règlement, gestion des conflits." }
+  ];
+
+  const container = document.getElementById("positions");
+  positions.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "position-card";
+    card.innerHTML = `
+      <div>
+        <p class="role-name">${p.name}</p>
+        <p class="role-desc">${p.desc}</p>
+      </div>
+      <button data-pos="${p.id}" data-name="${p.name}">Candidater →</button>
+    `;
+    container.appendChild(card);
+  });
+
+  container.addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    sessionStorage.setItem("recruit_position", btn.dataset.name);
+    window.location.href = "/questionnaire.html";
+  });
+
+  function tickClock(){
+    document.getElementById("clock").textContent = new Date().toLocaleTimeString("fr-FR");
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  // Vérifie si l'IP est en cooldown (échec / triche récente)
+  fetch("/api/status").then(r => r.json()).then(data => {
+    if (data.blocked) {
+      document.querySelectorAll("#positions button").forEach(b => b.disabled = true);
+      const box = document.getElementById("blocked-box");
+      box.style.display = "block";
+      function fmt(ms){
+        const h = Math.floor(ms/3600000);
+        const m = Math.floor((ms%3600000)/60000);
+        const s = Math.floor((ms%60000)/1000);
+        return `${h}h ${m}m ${s}s`;
+      }
+      function update(){
+        data.remainingMs -= 1000;
+        if (data.remainingMs <= 0){ box.style.display = "none"; document.querySelectorAll("#positions button").forEach(b => b.disabled = false); clearInterval(t); return; }
+        box.textContent = `⛔ Tu ne peux pas repasser le questionnaire pour le moment. Nouvel essai possible dans ${fmt(data.remainingMs)}.`;
+      }
+      update();
+      const t = setInterval(update, 1000);
+    }
+  }).catch(()=>{});
+</script>
+</body>
+</html>
